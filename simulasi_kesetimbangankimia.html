@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Simulasi Piston & Kesetimbangan Kimia</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+</head>
+<body>
+<script>
+let tekananSlider;
+let tekanan = 1;
+
+function setup() {
+  createCanvas(800, 500);
+  textAlign(CENTER, CENTER);
+  textSize(16);
+
+  tekananSlider = createSlider(0.5, 3, 1, 0.01);
+  tekananSlider.position(50, 450);
+  tekananSlider.style('width', '700px');
+}
+
+function draw() {
+  background(245);
+
+  tekanan = tekananSlider.value();
+  let volume = map(tekanan, 0.5, 3, 300, 100); // Volume invers dari tekanan
+  let pistonY = 100 + (300 - volume); // Posisi piston
+
+  // Judul
+  fill(0);
+  text("Simulasi Pengaruh Tekanan terhadap Volume dan Kesetimbangan", width / 2, 30);
+  text("Reaksi: N₂(g) + 3H₂(g) ⇌ 2NH₃(g)", width / 2, 60);
+
+  // Tabung reaksi
+  fill(200);
+  rect(200, 100, 400, 300, 20);
+
+  // Piston
+  fill(160);
+  rect(200, pistonY, 400, 10);
+
+  // Hitung konsentrasi berdasarkan tekanan
+  let n2, h2, nh3;
+  if (tekanan > 1.5) {
+    n2 = 0.5;
+    h2 = 1.5;
+    nh3 = 2;
+  } else if (tekanan < 0.8) {
+    n2 = 1.2;
+    h2 = 3.5;
+    nh3 = 0.6;
+  } else {
+    n2 = 1;
+    h2 = 3;
+    nh3 = 1;
+  }
+
+  // Molekul
+  drawMolecule("N₂", 280, pistonY + 60, n2, color(0, 102, 204));
+  drawMolecule("H₂", 400, pistonY + 60, h2, color(0, 204, 102));
+  drawMolecule("NH₃", 520, pistonY + 60, nh3, color(255, 153, 0));
+
+  // Label tekanan
+  fill(0);
+  text("Tekanan: " + tekanan.toFixed(2) + " atm", width / 2, 420);
+}
+
+function drawMolecule(label, x, y, count, col) {
+  fill(col);
+  for (let i = 0; i < count * 5; i++) {
+    ellipse(x + random(-30, 30), y + random(-30, 30), 15, 15);
+  }
+  fill(0);
+  text(label, x, y + 50);
+}
+</script>
+</body>
+</html>
